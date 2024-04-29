@@ -1,15 +1,11 @@
+import random
+import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd
 import yaml
-import time
-import random
-
-
-
-
 
 
 # Start Firefox WebDriver
@@ -21,11 +17,13 @@ driver.get("https://www.coursera.org/professional-certificates/google-cybersecur
 def type_slowly(element, text):
     for char in text:
         element.send_keys(char)
-        time.sleep(random.uniform(0.1, 0.3))
+        Random_Time_Delay()
 
-
+def Random_Time_Delay():
+    time.sleep(random.uniform(0.3, 1.5))
+    
 # Wait for the page to load
-time.sleep(2)
+Random_Time_Delay()
 
 # Load user data from YAML file
 with open(r"Scripts\Data\credentials.yaml", 'r') as c:
@@ -41,11 +39,11 @@ print("Course Name: ", CourseName.text)
 FinancialAidBtn = WebDriverWait(driver, 10).until(
     EC.presence_of_element_located((By.CSS_SELECTOR, '.button-link'))
 )
-time.sleep(1)
+Random_Time_Delay()
 FinancialAidBtn.click()
 
 # Put User Account Info for login
-time.sleep(1)
+Random_Time_Delay()
 EmailField = WebDriverWait(driver, 10).until(
     EC.presence_of_element_located((By.CSS_SELECTOR, '#email'))
 )
@@ -56,14 +54,27 @@ PasswordField = WebDriverWait(driver, 10).until(
 )
 type_slowly(PasswordField, user_data["password"])
 # Sleep to simulate human-like interaction
-time.sleep(1)
+Random_Time_Delay()
 
 LoginBtn = WebDriverWait(driver, 10).until(
     EC.presence_of_element_located((By.CSS_SELECTOR, "._6dgzsvq"))
 )
 LoginBtn.click()
-time.sleep(3)
+Random_Time_Delay()
+
+FinancialAidBtn.click()
+Random_Time_Delay()
 
 
+# Get the total number of courses available
+total_courses = len(driver.find_elements_by_css_selector(".cui-isChecked > input"))
+Random_Time_Delay()
+# Generate a random course number between 1 and total_courses
+course_number = random.randint(1, total_courses)
+
+CourseSelect = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.CSS_SELECTOR, f".cui-isChecked > input:nth-child({course_number})"))
+)
+Random_Time_Delay()
 # Quit the WebDriver
 driver.quit()
